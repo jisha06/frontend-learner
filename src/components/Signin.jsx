@@ -32,13 +32,21 @@ const Signin = () => {
                 if (response.data.status == "success") {
                     let token = response.data.token
                     let userid = response.data.data[0]._id
-                    
+                    let position = response.data.data[0].position
+                    let userName = response.data.data[0].name
                     sessionStorage.setItem("userid", userid)
                     sessionStorage.setItem("usertoken", token)
+                    sessionStorage.setItem("position", position)
+                    sessionStorage.setItem("userName", userName)
                     seterrorMessage('')
-                    if (response.data.data[0].position == "admin") { navigate('/trainplace/' + query) }
+                    if (position == "admin") { navigate('/trainplace/' + query) }
                     else {
+                        if(position == "Trainer")
                         navigate('/traindash')
+                        else
+                        {
+                            navigate('/placementOfficer')
+                        }
                     }
                 }
                 else {

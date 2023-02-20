@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from "react-router-dom"
-import Navbar from './Navbar';
+import Navbar from './NavbarT';
 
 const UserList = () => {
     const [empdata, setData] = useState([])
@@ -22,8 +22,9 @@ const UserList = () => {
 
     const loadUser = (query) => {
         console.log("Loaduser" + query)
-        //const userdata = {userId, token, query}
-        axios.get('http://localhost:3001/viewuser/' + query)
+        const userdata = {userId, token, query}
+        console.log("userdata   "+ userId, token, query)
+        axios.post('http://localhost:3001/viewuser/' + query, userdata)
 
             .then(
                 (res) => {
@@ -62,45 +63,48 @@ const UserList = () => {
     }
 
     return (
-        <div className='container'>
+        <div>
             <Navbar />
-            <div className="py-4">
-                <h3 class="mb-3 text-center">Trainer/Placement Officer Details</h3>
-                <div className="divbtn">
-                    <Link to="/addtrainer" className="btn btn-success">Add New (+)</Link>                    
-                </div>
-                <div class="form-outline">
-                    <input type="search" id="form1" class="form-control" placeholder="Search..." aria-label="Search" onChange={(e) => setQuery(e.target.value)} />
-                </div>
-                <table class="table border shadow">
-                    <thead class="thead-primary">
-                        <tr>
-                            <th scope="col"></th>
-                            <th scope="col">Name</th>
-                            <th scope="col">Email Id</th>
-                            <th scope="col">Location</th>
-                            <th scope="col">Posistion</th>
+            <div className='container'>
 
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {empdata.map((value, index) => (
+                <div className="py-4">
+                    <h3 class="mb-3 text-center">Trainer/Placement Officer Details</h3>
+                    <div className="divbtn">
+                        <Link to="/addtrainer" className="btn btn-success">Add New (+)</Link>
+                    </div>
+                    <div class="form-outline">
+                        <input type="search" id="form1" class="form-control" placeholder="Search..." aria-label="Search" onChange={(e) => setQuery(e.target.value)} />
+                    </div>
+                    <table class="table border shadow">
+                        <thead class="thead-primary">
                             <tr>
-                                <th scope="row">{index + 1}</th>
-                                <td>{value.name}</td>
-                                <td>{value.emailid}</td>
-                                <td>{value.location}</td>
-                                <td>{value.position}</td>
-                                <td>
-                                    <button className='btn btn-prinmary btn-success' onClick={() => deleteUser(value._id)}>Delete</button>
-                                    <button className='btn btn-prinmary btn-danger' onClick={() => editUser(value._id)}>Edit</button>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
+                                <th scope="col"></th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Email Id</th>
+                                <th scope="col">Location</th>
+                                <th scope="col">Posistion</th>
 
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {empdata.map((value, index) => (
+                                <tr>
+                                    <th scope="row">{index + 1}</th>
+                                    <td>{value.name}</td>
+                                    <td>{value.emailid}</td>
+                                    <td>{value.location}</td>
+                                    <td>{value.position}</td>
+                                    <td>
+                                        <button className='btn btn-prinmary btn-success' onClick={() => deleteUser(value._id)}>Delete</button>
+                                        <button className='btn btn-prinmary btn-danger' onClick={() => editUser(value._id)}>Edit</button>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
         </div>
     )
 }

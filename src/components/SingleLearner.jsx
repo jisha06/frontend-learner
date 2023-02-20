@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import NavbarComponent from './Navbar';
+import NavbarComponent from './NavbarT';
+import { useNavigate } from 'react-router-dom';
 
 const courses = [
   { value: '', label: 'Choose...' },
@@ -42,10 +43,18 @@ const SingleLearner = () => {
   const [project, setProject] = useState('');
   const [batch, setBatch] = useState('');
   const [courseStatus, setCourseStatus] = useState('');
-
-  const handleSubmit = async (event) => {
+  const navigate = useNavigate();
+  
+  const backUser = () => {
+    navigate('/traindash')
+}
+ 
+const handleSubmit = async (event) => {
     event.preventDefault();
-
+    if(learnerId == '' || name == '' || courseName == '' || project == '' || batch == '' || courseStatus== '')
+    {
+      return alert("All fields are required")
+    }
     const newLearnerData = {
       learnerId,
       name,
@@ -58,6 +67,7 @@ const SingleLearner = () => {
     try {
       await axios.post('http://localhost:3001/api/addlearner', newLearnerData);
       alert('Data submitted successfully!');
+      navigate('/traindash')
       setLearnerId('');
       setLearnerName('');
       setCourse('');
@@ -67,6 +77,7 @@ const SingleLearner = () => {
     } catch (error) {
       console.error(error);
     }
+ 
   };
 
   return (
@@ -219,8 +230,10 @@ const SingleLearner = () => {
       </select>
     </div>
   </div>
-  <button style={{marginTop:"5%", marginLeft:"45%"}} type="submit" className="btn btn-primary">
+  <button style={{marginTop:"2%", marginLeft:"25%"}}  type="submit" className="btn btn-primary">
     Submit
+  </button>
+  <button style={{marginTop:"2%", marginLeft:"25%"}} type="submit" className="btn btn-primary" onClick={backUser}> Back
   </button>
 </form>
 <br />

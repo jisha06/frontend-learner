@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import Navbarplacement from "./Navbarplacement";
+import Navbarplacement from "./NavbarT";
 
 const PlacementOfficer = () => {
   const [data, setData] = useState([]);
