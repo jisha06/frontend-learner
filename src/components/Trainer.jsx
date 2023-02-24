@@ -1,78 +1,60 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import NavbarComponent from './NavbarT';
-import { Link, useNavigate } from 'react-router-dom';
-import {
-  Dropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-} from 'reactstrap';
+import { Link } from 'react-router-dom';
+import Papa from"papaparse";
 
 const StudentList = () => {
   const [data, setData] = useState([]);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const toggleDropdown = () => setDropdownOpen(!dropdownOpen);
-  const navigate = useNavigate();
   let userName = sessionStorage.getItem("userName")
+
+  //const serverurl ="api"
+  const serverurl = "http://localhost:3001"
 
   const [file, setFile] = useState('');
   const [array, setArray] = useState([]);
-  const fileReader = new FileReader();
-
+ 
   useEffect(() => {
     loadStudent();
   }, []);
 
-  const loadStudent =()=>{
-    axios.get('http://localhost:3001/data')
-    .then(response => setData(response.data))
-    .catch(error => console.error(error));
+  const loadStudent = () => {
+    axios.get(`${serverurl}/data`)
+      .then(response => setData(response.data))
+      .catch(error => console.error(error));
   }
   const handleOnChange = (e) => {
     setFile(e.target.files[0]);
-  };
+    Papa.parse(e.target.files[0], {
+      header: true,
+      skipEmptyLines: true,
+      complete: function (result) {
+        const columnArray = [];
+        const valuesArray = [];
 
-  const csvFileToArray = string => {
-    const csvHeader = string.slice(0, string.indexOf("\n")).split(",");
-    const csvRows = string.slice(string.indexOf("\n") + 1).split("\n");
- 
-    const array = csvRows.map(i => {
-        const values = i.split(",");
-        const obj = csvHeader.reduce((object, header, index) => {
-            object[header] = values[index];
-            return object;
-        }, {});       
-        return obj;
-    });
-   console.log("newArray    " +array)
-    setArray(array);
-};
+        result.data.map((d) => {
+          columnArray.push(Object.keys(d));
+          valuesArray.push(Object.values(d))
+        });
+        console.log(result.data)
+        setArray(result.data)
+        console.log("array  " + array)
+      }
+    })
+  };  
 
   const handleOnSubmit = (e) => {
     e.preventDefault();
-    if (file) {
-      fileReader.onload = function (event) {
-        const text = event.target.result;
-        console.log("text  " + text)
-        csvFileToArray(text);
-      };
 
-      fileReader.readAsText(file);
-    }
-    else{
-      return alert("Choose file")
-    }
-
-    console.log("CVDATA   " + array)
-    axios.post('http://localhost:3001/cvupload', array)
+    console.log("CVDATA   " + JSON.stringify(array))
+    let jsonArray = JSON.stringify(array)
+    console.log("JSONARRAY" + jsonArray)
+    axios.post('http://localhost:3001/cvupload', jsonArray)
       .then((response) => {
         console.log("Post " + response.data.status)
         if (response.data.status == "Success") {
           alert("Uploaded successfully!")
-          window.location.reload();      
         }
-
         else {
           alert("Error " + response.data.status)
         }
@@ -81,6 +63,24 @@ const StudentList = () => {
       .catch((error) => {
         console.log(error)
       })
+
+    //console.log("CVDATA   " + array)
+    // axios.post('http://localhost:3001/cvupload', array)
+    //   .then((response) => {
+    //     console.log("Post " + response.data.status)
+    //     if (response.data.status == "Success") {
+    //       alert("Uploaded successfully!")
+    //       window.location.reload();      
+    //     }
+
+    //     else {
+    //       alert("Error " + response.data.status)
+    //     }
+
+    //   })
+    //   .catch((error) => {
+    //     console.log(error)
+    //   })
   };
 
   return (

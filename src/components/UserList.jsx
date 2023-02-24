@@ -7,6 +7,8 @@ const UserList = () => {
     const [empdata, setData] = useState([])
     const [query, setQuery] = useState("")
     const navigate = useNavigate();
+    //const serverurl ="api"
+  const serverurl = "http://localhost:3001"
     const [userId, setUserid] = useState(sessionStorage.getItem("userid"))
     const [token, setToken] = useState(sessionStorage.getItem("usertoken"))
 
@@ -24,7 +26,7 @@ const UserList = () => {
         console.log("Loaduser" + query)
         const userdata = {userId, token, query}
         console.log("userdata   "+ userId, token, query)
-        axios.post('http://localhost:3001/viewuser/' + query, userdata)
+        axios.post(`${serverurl}/viewuser/` + query, userdata)
 
             .then(
                 (res) => {
@@ -40,7 +42,7 @@ const UserList = () => {
     const deleteUser = (userid) => {
         console.log(userid)
 
-        axios.delete('http://localhost:3001/deleteUser/' + userid)
+        axios.delete(`${serverurl}/deleteUser/` + userid)
             .then((res) => {
                 console.log(res.status)
                 if (res.status == 200) {

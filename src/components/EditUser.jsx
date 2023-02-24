@@ -16,6 +16,9 @@ const EditUser = () => {
     const [position, positionchange] = useState("");
     const [salary, salarychange] = useState("");
 
+    //const serverurl ="api"
+  const serverurl = "http://localhost:3001"
+
 
     useEffect(() => {
         loadUser();
@@ -24,7 +27,7 @@ const EditUser = () => {
     const loadUser = () => {
 
         console.log(empid)
-        axios.post('http://localhost:3001/getuser', { "_id": empid })
+        axios.post(`${serverurl}/getuser`, { "_id": empid })
             .then(
                 (res) => {
                     console.log(res.data.name)
@@ -46,7 +49,7 @@ const EditUser = () => {
         const _id = empid
         const empdata = { _id, name, emailid, location, position, salary };
         console.log(empdata)
-        axios.put('http://localhost:3001/updateUser', empdata)
+        axios.put(`${serverurl}/updateUser`, empdata)
             .then((response) => {
                 console.log(response.data.status)
                 if (response.data.status == "Success") {

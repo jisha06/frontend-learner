@@ -6,7 +6,8 @@ import axios from 'axios'
 const Signin = () => {
     const navigate = useNavigate();
     const query = 0;
-
+     //const serverurl ="api"
+  const serverurl = "http://localhost:3001"
     const [data, setData] = useState({
         emailid: "",
         password: ""
@@ -26,7 +27,7 @@ const Signin = () => {
     const formSubmitter = (e) => {
         e.preventDefault()
 
-        axios.post('http://localhost:3001/signin', data)
+        axios.post(`${serverurl}/signin`, data)
             .then((response) => {
             
                 if (response.data.status == "success") {
@@ -38,6 +39,7 @@ const Signin = () => {
                     sessionStorage.setItem("usertoken", token)
                     sessionStorage.setItem("position", position)
                     sessionStorage.setItem("userName", userName)
+                    console.log(position)
                     seterrorMessage('')
                     if (position == "admin") { navigate('/trainplace/' + query) }
                     else {

@@ -6,9 +6,12 @@ const PlacementOfficer = () => {
   const [data, setData] = useState([]);
   const [error, setError] = useState(null);
 
+  //const serverurl ="api"
+  const serverurl = "http://localhost:3001"
+
   useEffect(() => {
     axios
-      .get("http://localhost:3001/data")
+      .get(`${serverurl}/data`)
       .then(response => setData(response.data))
       .catch(error => setError(error));
   }, []);
@@ -16,7 +19,7 @@ const PlacementOfficer = () => {
   const handlePlacementStatusChange = (event, learner) => {
     const newPlacementStatus = event.target.value;
     axios
-      .put(`http://localhost:3001/learners/${learner._id}/placement`, {
+      .put(`${serverurl}/learners/${learner._id}/placement`, {
         placementStatus: newPlacementStatus
       })
       .then(response => {
@@ -37,7 +40,7 @@ const PlacementOfficer = () => {
 
   return (
     <>
-    <Navbarplacement/>
+      <Navbarplacement />
       <div className="container mt-4">
         <h2 style={{ textAlign: "center", fontFamily: "fantasy" }}> Learner List</h2>
         <table className="table table-striped table-bordered">
@@ -63,8 +66,8 @@ const PlacementOfficer = () => {
                 <td>{student.courseStatus}</td>
                 <td>
                   <select value={student.placementStatus} onChange={(event) => handlePlacementStatusChange(event, student)}>
-                    <option value="Placed">Placed</option>
                     <option value="Job Seeking">Job Seeking</option>
+                    <option value="Placed">Placed</option>
                     <option value="not interested">Not Interested</option>
                   </select>
                 </td>

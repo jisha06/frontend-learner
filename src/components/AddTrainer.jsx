@@ -5,7 +5,10 @@ import { ToastContainer, toast } from 'react-toastify'
 import Navbar from './NavbarT'
 
 const AddTrainer = () => {
+  
   <ToastContainer />
+  //const serverurl ="api"
+  const serverurl = "http://localhost:3001"
   const navigate = useNavigate();
   const [data, setData] = useState({
     name: '',
@@ -44,7 +47,7 @@ const AddTrainer = () => {
       }
       else {
 
-        axios.post('http://localhost:3001/addUser', data)
+        axios.post(`${serverurl}/addUser`, data)
           .then((response) => {
             console.log("Post " + response.data)
             if (response.data.status == "Success") {
